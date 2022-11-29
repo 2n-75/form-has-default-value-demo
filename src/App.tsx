@@ -1,9 +1,9 @@
 import React from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 
-import { useForm } from 'react-hook-form'
+import { AutoSuggest } from './components/AutoSuggest'
 import { InputText } from './components/InputText'
 import { SelectBox } from './components/SelectBox'
-import { SuggestInput } from './components/SuggestInput'
 
 type InputValues = {
   name: string
@@ -12,7 +12,7 @@ type InputValues = {
     label: string
     value: string
   }
-  score: number
+  review: number
 }
 
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
       label: '北海道',
       value: '北海道',
     },
-    score: 3,
+    review: 3,
   }
   const {
     register,
@@ -35,26 +35,18 @@ const App = () => {
     mode: 'onChange',
     defaultValues,
   })
-  const scoreItems = [
+  const reviewItems = [
     {
-      label: '1',
+      label: '好みが分かれる',
       value: 1,
     },
     {
-      label: '2',
+      label: 'どちらでもない',
       value: 2,
     },
     {
-      label: '3',
+      label: 'おすすめ',
       value: 3,
-    },
-    {
-      label: '4',
-      value: 4,
-    },
-    {
-      label: '5',
-      value: 5,
     },
   ]
   const onSubmit = (values: InputValues) => {
@@ -64,18 +56,18 @@ const App = () => {
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form__item">
-          <label htmlFor="score" className="form__label">
+          <label htmlFor="review" className="form__label">
             評価
           </label>
           <div className="radioGroup">
-            {scoreItems.map(item => (
+            {reviewItems.map(item => (
               <label className="radioGroup__label" key={item.value}>
                 <input
                   className="radioGroup__radio"
                   type="radio"
-                  {...register('score', { required: true })}
+                  {...register('review', { required: true })}
                   value={item.value}
-                  defaultChecked={item.value === defaultValues?.score}
+                  defaultChecked={item.value === defaultValues?.review}
                 />
                 {item.label}
               </label>
@@ -90,17 +82,17 @@ const App = () => {
           <InputText {...register('name', { required: '必須項目です' })} placeholder="なまえ" id="name" />
         </div>
         <div className="form__item">
-          <label htmlFor="tdhk" className="form__label">
+          <label htmlFor="producingArea" className="form__label">
             生産地
           </label>
-          <SuggestInput
-            id="tdhk"
+          <AutoSuggest
+            id="producingArea"
             options={[
               { label: '北海道', value: '北海道' },
               { label: '青森', value: '青森' },
             ]}
             placeholder="東京"
-            initialValue={defaultValues?.producingArea}
+            defaultValue={defaultValues?.producingArea}
             onSelectSuggestion={option => setValue('producingArea', option)}
           />
         </div>

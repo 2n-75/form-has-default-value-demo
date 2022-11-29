@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import React from 'react'
 import Autosuggest from 'react-autosuggest'
 
-import styles from '../styles/SuggestInput.module.scss'
+import styles from '../styles/AutoSuggest.module.scss'
 type SuggestionType = {
   label: string
   value: string
@@ -15,20 +15,20 @@ export type Props = {
   id: string
   options: SuggestionType[]
   placeholder?: string
-  initialValue?: SuggestionType
+  defaultValue?: SuggestionType
   onSelectSuggestion: (options: SuggestionType) => void
 }
 
 // 候補が表示されるinput
-export const SuggestInput: FC<Props> = ({ id, options, placeholder, initialValue, onSelectSuggestion }) => {
-  const [value, setValue] = useState('')
+export const AutoSuggest: FC<Props> = ({ id, options, placeholder, defaultValue, onSelectSuggestion }) => {
   const [suggestions, setSuggestions] = useState<SuggestionType[]>([])
+  const [value, setValue] = useState('')
 
   useEffect(() => {
-    if (initialValue) {
-      setValue(initialValue.label)
+    if (defaultValue) {
+      setValue(defaultValue.label)
     }
-  }, [initialValue])
+  }, [defaultValue])
   const onChange = (event: React.FormEvent<HTMLElement>, { newValue }: { newValue: string }) => {
     setValue(newValue)
   }
