@@ -13,7 +13,7 @@ type InputValues = {
     label: string
     value: string
   }
-  review: number
+  review: string
 }
 
 const App = () => {
@@ -24,36 +24,24 @@ const App = () => {
       label: '新潟県',
       value: '新潟県',
     },
-    review: 5,
+    review: '5',
   }
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { isDirty, isValid },
   } = useForm<InputValues>({
     mode: 'onChange',
     defaultValues,
   })
-
   const onSubmit = (values: InputValues) => {
     console.log({ values })
   }
   return (
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
-        <div className="form__item">
-          <label htmlFor="level" className="form__label">
-            レベル
-          </label>
-          <SelectBox
-            {...register('level', { required: true })}
-            id="level"
-            name="level"
-            options={levelOptions}
-            defaultValue={defaultValues?.level}
-          />
-        </div>
         <div className="form__item">
           <label htmlFor="name" className="form__label">
             名前
@@ -70,6 +58,18 @@ const App = () => {
             placeholder="東京"
             defaultValue={defaultValues?.producingArea}
             onSelectSuggestion={option => setValue('producingArea', option)}
+          />
+        </div>
+        <div className="form__item">
+          <label htmlFor="level" className="form__label">
+            レベル
+          </label>
+          <SelectBox
+            {...register('level', { required: true })}
+            id="level"
+            name="level"
+            options={levelOptions}
+            defaultValue={defaultValues?.level}
           />
         </div>
         <div className="form__item">
