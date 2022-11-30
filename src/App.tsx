@@ -1,13 +1,14 @@
 import React from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { AutoSuggest } from './components/AutoSuggest'
 import { InputText } from './components/InputText'
 import { SelectBox } from './components/SelectBox'
+import { levelOptions, producingAreaOptions, reviewOptions } from './const'
 
 type InputValues = {
   name: string
-  level: number
+  level: string
   producingArea: {
     label: string
     value: string
@@ -17,38 +18,24 @@ type InputValues = {
 
 const App = () => {
   const defaultValues = {
-    name: 'waowao',
-    level: 1,
+    name: '上善如水',
+    level: 'beginner',
     producingArea: {
-      label: '北海道',
-      value: '北海道',
+      label: '新潟県',
+      value: '新潟県',
     },
-    review: 3,
+    review: 5,
   }
   const {
     register,
     handleSubmit,
     setValue,
-    control,
-    formState: { isDirty, isValid, errors },
+    formState: { isDirty, isValid },
   } = useForm<InputValues>({
     mode: 'onChange',
     defaultValues,
   })
-  const reviewItems = [
-    {
-      label: '好みが分かれる',
-      value: 1,
-    },
-    {
-      label: 'どちらでもない',
-      value: 2,
-    },
-    {
-      label: 'おすすめ',
-      value: 3,
-    },
-  ]
+
   const onSubmit = (values: InputValues) => {
     console.log({ values })
   }
@@ -56,25 +43,17 @@ const App = () => {
     <div className="container">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form__item">
-          <label htmlFor="review" className="form__label">
-            評価
+          <label htmlFor="level" className="form__label">
+            レベル
           </label>
-          <div className="radioGroup">
-            {reviewItems.map(item => (
-              <label className="radioGroup__label" key={item.value}>
-                <input
-                  className="radioGroup__radio"
-                  type="radio"
-                  {...register('review', { required: true })}
-                  value={item.value}
-                  defaultChecked={item.value === defaultValues?.review}
-                />
-                {item.label}
-              </label>
-            ))}
-          </div>
+          <SelectBox
+            {...register('level', { required: true })}
+            id="level"
+            name="level"
+            options={levelOptions}
+            defaultValue={defaultValues?.level}
+          />
         </div>
-
         <div className="form__item">
           <label htmlFor="name" className="form__label">
             名前
@@ -87,30 +66,30 @@ const App = () => {
           </label>
           <AutoSuggest
             id="producingArea"
-            options={[
-              { label: '北海道', value: '北海道' },
-              { label: '青森', value: '青森' },
-            ]}
+            options={producingAreaOptions}
             placeholder="東京"
             defaultValue={defaultValues?.producingArea}
             onSelectSuggestion={option => setValue('producingArea', option)}
           />
         </div>
         <div className="form__item">
-          <label htmlFor="level" className="form__label">
-            レベル
+          <label htmlFor="review" className="form__label">
+            おすすめ度
           </label>
-          <SelectBox
-            {...register('level', { required: true })}
-            id="level"
-            name="level"
-            options={[
-              { label: '初心者向け', value: '1' },
-              { label: '中級者向け', value: '2' },
-              { label: '上級者向け', value: '3' },
-            ]}
-            defaultValue={defaultValues?.level}
-          />
+          <div className="radioGroup">
+            {reviewOptions.map(item => (
+              <label className="radioGroup__label" key={item.value}>
+                <input
+                  className="radioGroup__radio"
+                  type="radio"
+                  {...register('review', { required: true })}
+                  value={item.value}
+                  defaultChecked={item.value === defaultValues?.review}
+                />
+                {item.label}
+              </label>
+            ))}
+          </div>
         </div>
         <div className="form__footer">
           <button className="form__submitButton" type="submit" disabled={!isDirty || !isValid}>

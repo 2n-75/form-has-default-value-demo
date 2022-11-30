@@ -8,9 +8,6 @@ type SuggestionType = {
   value: string
 }
 
-/**
- * 入力単語がsuggestionsの頭とマッチしているかを判断しているっぽい
- */
 export type Props = {
   id: string
   options: SuggestionType[]
@@ -21,9 +18,8 @@ export type Props = {
 
 // 候補が表示されるinput
 export const AutoSuggest: FC<Props> = ({ id, options, placeholder, defaultValue, onSelectSuggestion }) => {
-  const [suggestions, setSuggestions] = useState<SuggestionType[]>([])
+  const [suggestions, setSuggestions] = useState<SuggestionType[]>(options)
   const [value, setValue] = useState('')
-
   useEffect(() => {
     if (defaultValue) {
       setValue(defaultValue.label)
@@ -31,6 +27,12 @@ export const AutoSuggest: FC<Props> = ({ id, options, placeholder, defaultValue,
   }, [defaultValue])
   const onChange = (event: React.FormEvent<HTMLElement>, { newValue }: { newValue: string }) => {
     setValue(newValue)
+  }
+
+  const onBlur = () => {
+    if (defaultValue && value !== defaultValue.label) {
+      setValue(defaultValue.label)
+    }
   }
 
   // Autosuggest will call this function every time you need to update suggestions.
@@ -41,16 +43,15 @@ export const AutoSuggest: FC<Props> = ({ id, options, placeholder, defaultValue,
 
   // Autosuggest will call this function every time you need to clear suggestions.
   const onSuggestionsClearRequested = () => {
-    setSuggestions([])
+    setSuggestions(options)
   }
   // Teach Autosuggest how to calculate suggestions for any given input value.
   const getSuggestions = (value: string) => {
     const inputValue = value.trim().toLowerCase()
     const inputLength = inputValue.length
-
     return inputLength === 0
-      ? []
-      : options.filter((option: SuggestionType) => option.label.toLowerCase().slice(0, inputLength) === inputValue)
+      ? options
+      : options.filter((option: SuggestionType) => option.label.toLowerCase().includes(inputValue))
   }
 
   // When suggestion is clicked, Autosuggest needs to populate the input
@@ -72,6 +73,7 @@ export const AutoSuggest: FC<Props> = ({ id, options, placeholder, defaultValue,
     placeholder: placeholder,
     value,
     onChange: onChange,
+    onBlur: onBlur,
   }
   return (
     <Autosuggest

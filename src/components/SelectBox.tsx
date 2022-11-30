@@ -12,19 +12,17 @@ export type Props = {
       }[]
 } & SelectHTMLAttributes<HTMLSelectElement>
 
-export const SelectBox: FC<Props> = forwardRef(
-  ({ options, id, name, defaultValue, ...rest }, ref: Ref<HTMLSelectElement>) => (
-    <select name={name} id={id} ref={ref} {...rest} className="selectBox" defaultValue={defaultValue}>
-      <option value="" disabled>
-        選択してください
+export const SelectBox: FC<Props> = forwardRef(({ options, id, name, ...rest }, ref: Ref<HTMLSelectElement>) => (
+  <select name={name} id={id} ref={ref} {...rest} className="selectBox">
+    <option value="" disabled>
+      選択してください
+    </option>
+    {options.map(option => (
+      <option value={option.value} key={option.value}>
+        {option.label}
       </option>
-      {options.map(option => (
-        <option value={option.value} key={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  )
-)
+    ))}
+  </select>
+))
 
 SelectBox.displayName = 'SelectBox'
