@@ -18,7 +18,7 @@ type InputValues = {
 
 const App = () => {
   const defaultValues = {
-    name: '上善如水',
+    name: '小松原',
     level: 'beginner',
     producingArea: {
       label: '新潟県',
@@ -30,7 +30,6 @@ const App = () => {
     register,
     handleSubmit,
     setValue,
-    control,
     formState: { isDirty, isValid },
   } = useForm<InputValues>({
     mode: 'onChange',
